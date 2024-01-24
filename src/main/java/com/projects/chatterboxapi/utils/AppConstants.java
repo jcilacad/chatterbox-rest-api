@@ -8,4 +8,6 @@ public class AppConstants {
     public static final String USERNAME_KEY = "username:%s";
     public static final String USER_ID_KEY = "user:%s";
     public static final String ONLINE_USERS_KEY = "online_users";
+    public static final String USER_ATTR_NAME = "user";
+    public static final String PORT = "6379";
 }
