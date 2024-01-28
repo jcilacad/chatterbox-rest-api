@@ -1,14 +1,38 @@
 package com.projects.chatterboxapi.entity;
 
+import com.mongodb.lang.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+
+import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
+@Document(collection = "users")
 public class User {
-    private int id;
-    private String username;
-    private boolean isOnline;
+
+    @Id
+    private String id;
+
+    private String name;
+
+    private String email;
+
+    private String imageUrl;
+
+    @CreatedDate
+    private Instant dateCreated;
+
+    @LastModifiedDate
+    private Instant dateUpdated;
 }
