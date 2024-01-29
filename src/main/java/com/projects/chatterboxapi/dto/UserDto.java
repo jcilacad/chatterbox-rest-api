@@ -20,11 +20,14 @@ public class UserDto {
     private Instant dateUpdated;
 
     public static UserDto fromGoogleUser(DefaultOidcUser googleUser) {
-        UserDto userDto = new UserDto();
-        userDto.id = googleUser.getSubject();
-        userDto.name = googleUser.getFullName();
-        userDto.email = googleUser.getEmail();
-        userDto.imageUrl = googleUser.getPicture();
+        UserDto userDto = UserDto.builder()
+                .id(googleUser.getSubject())
+                .name(googleUser.getFullName())
+                .email(googleUser.getEmail())
+                .imageUrl(googleUser.getPicture())
+                .dateCreated(googleUser.getIssuedAt())
+                .dateUpdated(googleUser.getIssuedAt())
+                .build();
         return userDto;
     }
 }
