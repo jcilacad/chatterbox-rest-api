@@ -4,4 +4,5 @@ import com.projects.chatterboxapi.dto.UserDto;
 
 public interface UserService {
     UserDto saveUser(UserDto userDto);
+    String getJwtSecret();
 }

@@ -3,7 +3,7 @@ package com.projects.chatterboxapi.config;
 import com.projects.chatterboxapi.security.Oauth2AuthenticationEntryPoint;
 import com.projects.chatterboxapi.security.Oauth2LoginSuccessHandler;
 import com.projects.chatterboxapi.service.UserService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,11 +14,11 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class SecurityConfig {
 
-    private UserService userService;
-    private ClientRegistrationRepository clientRegistrationRepository;
+    private final UserService userService;
+    private final ClientRegistrationRepository clientRegistrationRepository;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
@@ -38,7 +38,7 @@ public class SecurityConfig {
                         .deleteCookies("JSESSIONID")
                 ).oauth2Login(customizer -> {
                     customizer
-                            .successHandler(new Oauth2LoginSuccessHandler(this.userService));
+                            .successHandler(new Oauth2LoginSuccessHandler(userService));
                 });
         return httpSecurity.build();
     }
