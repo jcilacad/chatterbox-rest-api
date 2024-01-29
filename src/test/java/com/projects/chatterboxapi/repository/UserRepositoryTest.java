@@ -34,4 +34,13 @@ class UserRepositoryTest {
         User savedUser = UserMapper.MAPPER.toEntity(userDto);
         userRepository.save(savedUser);
     }
+
+    @Test
+    void updateUser () {
+        User user = userRepository.findById("108977918358293537943").orElseThrow();
+
+        user.setName("adawdawdaw");
+        user.setEmail("Jdawdaw@gmail.com");
+        userRepository.save(user);
+    }
 }
