@@ -3,14 +3,20 @@ package com.projects.chatterboxapi.repository;
 import com.projects.chatterboxapi.dto.UserDto;
 import com.projects.chatterboxapi.entity.User;
 import com.projects.chatterboxapi.mapper.UserMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
+@Slf4j
 class UserRepositoryTest {
 
     private UserRepository userRepository;
+
+    @Value("${jwt.secret}")
+    private String jwtSecret;
 
     @Autowired
     public UserRepositoryTest(UserRepository userRepository) {
@@ -42,5 +48,10 @@ class UserRepositoryTest {
         user.setName("adawdawdaw");
         user.setEmail("Jdawdaw@gmail.com");
         userRepository.save(user);
+    }
+
+    @Test
+    void sampleJwtSecret () {
+        log.info("JWT Secret - {}", jwtSecret);
     }
 }

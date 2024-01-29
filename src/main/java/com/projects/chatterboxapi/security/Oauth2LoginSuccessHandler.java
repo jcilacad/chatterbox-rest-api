@@ -2,6 +2,8 @@ package com.projects.chatterboxapi.security;
 
 import com.projects.chatterboxapi.dto.UserDto;
 import com.projects.chatterboxapi.service.UserService;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -13,12 +15,13 @@ import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 import java.io.IOException;
+import java.util.Date;
 
 @Slf4j
 @AllArgsConstructor
 public class Oauth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
-    private UserService userService;
+    private final UserService userService;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
@@ -26,6 +29,13 @@ public class Oauth2LoginSuccessHandler implements AuthenticationSuccessHandler {
                                         Authentication authentication) throws IOException, ServletException {
         log.info("Authentication: {}", authentication);
         DefaultOidcUser oidcUser = (DefaultOidcUser) authentication.getPrincipal();
+        String idToken = oidcUser.getIdToken().getTokenValue();
+        String jwt = Jwts.builder()
+                .setSubject(idToken)
+                .setIssuedAt(new Date())
+                .signWith(Keys.hmacShaKeyFor(userService.getJwtSecret().getBytes()))
+                .compact();
+        // TODO: Send the jwt to the client for authentication and authorization.
         UserDto userDto = UserDto.fromGoogleUser(oidcUser);
         UserDto savedUser = userService.saveUser(userDto);
         AppAuthenticationToken token = new AppAuthenticationToken(savedUser);
