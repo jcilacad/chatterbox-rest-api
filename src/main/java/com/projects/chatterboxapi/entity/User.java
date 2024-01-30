@@ -27,6 +27,8 @@ public class User {
 
     private String imageUrl;
 
+    private boolean isActive;
+
     @CreatedDate
     private Instant dateCreated;
 

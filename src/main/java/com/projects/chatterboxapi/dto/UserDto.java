@@ -16,6 +16,7 @@ public class UserDto {
     private String name;
     private String email;
     private String imageUrl;
+    private boolean isActive;
     private Instant dateCreated;
     private Instant dateUpdated;
 
@@ -25,6 +26,7 @@ public class UserDto {
                 .name(googleUser.getFullName())
                 .email(googleUser.getEmail())
                 .imageUrl(googleUser.getPicture())
+                .isActive(true)
                 .dateCreated(googleUser.getIssuedAt())
                 .dateUpdated(googleUser.getIssuedAt())
                 .build();
