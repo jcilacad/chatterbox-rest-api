@@ -1,5 +1,6 @@
 package com.projects.chatterboxapi.dto;
 
+import com.projects.chatterboxapi.entity.User;
 import lombok.*;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 
@@ -16,20 +17,19 @@ public class UserDto {
     private String name;
     private String email;
     private String imageUrl;
-    private boolean isActive;
+    private boolean active;
     private Instant dateCreated;
     private Instant dateUpdated;
 
     public static UserDto fromGoogleUser(DefaultOidcUser googleUser) {
-        UserDto userDto = UserDto.builder()
-                .id(googleUser.getSubject())
-                .name(googleUser.getFullName())
-                .email(googleUser.getEmail())
-                .imageUrl(googleUser.getPicture())
-                .isActive(true)
-                .dateCreated(googleUser.getIssuedAt())
-                .dateUpdated(googleUser.getIssuedAt())
-                .build();
+        UserDto userDto = new UserDto();
+        userDto.setId(googleUser.getSubject());
+        userDto.setName(googleUser.getName());
+        userDto.setEmail(googleUser.getEmail());
+        userDto.setImageUrl(googleUser.getPicture());
+        userDto.setActive(true);
+        userDto.setDateCreated(googleUser.getIssuedAt());
+        userDto.setDateUpdated(googleUser.getIssuedAt());
         return userDto;
     }
 }

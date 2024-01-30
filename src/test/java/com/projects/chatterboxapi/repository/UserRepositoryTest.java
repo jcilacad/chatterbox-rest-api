@@ -3,6 +3,8 @@ package com.projects.chatterboxapi.repository;
 import com.projects.chatterboxapi.dto.UserDto;
 import com.projects.chatterboxapi.entity.User;
 import com.projects.chatterboxapi.mapper.UserMapper;
+import com.projects.chatterboxapi.service.UserService;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 class UserRepositoryTest {
 
     private UserRepository userRepository;
+    @Autowired
+    private UserService userService;
 
     @Value("${jwt.secret}")
     private String jwtSecret;
@@ -48,6 +52,13 @@ class UserRepositoryTest {
         user.setName("adawdawdaw");
         user.setEmail("Jdawdaw@gmail.com");
         userRepository.save(user);
+    }
+
+    @Test
+    void setActiveStatus() {
+        boolean status = false;
+        String email = "chatgpt3202023@gmail.com";
+        userService.setActiveStatus(email, status);
     }
 
     @Test
