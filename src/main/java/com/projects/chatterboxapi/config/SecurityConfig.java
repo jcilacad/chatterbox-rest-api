@@ -30,7 +30,6 @@ public class SecurityConfig {
                     exceptionHandlingConfigurer.authenticationEntryPoint(
                             new Oauth2AuthenticationEntryPoint());
                 })
-
                 .logout(logout -> logout
                         .logoutSuccessHandler(customOidcLogoutSuccessHandler())
                         .invalidateHttpSession(true)
