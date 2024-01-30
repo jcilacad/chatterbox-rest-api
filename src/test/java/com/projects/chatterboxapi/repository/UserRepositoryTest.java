@@ -57,7 +57,7 @@ class UserRepositoryTest {
     @Test
     void setActiveStatus() {
         boolean status = false;
-        String email = "chatgpt3202023@gmail.com";
+        String email = "johnchristopherilacad27@gmail.com";
         userService.setActiveStatus(email, status);
     }
 

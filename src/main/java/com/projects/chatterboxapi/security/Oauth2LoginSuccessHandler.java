@@ -36,11 +36,11 @@ public class Oauth2LoginSuccessHandler implements AuthenticationSuccessHandler {
                 .signWith(Keys.hmacShaKeyFor(userService.getJwtSecret().getBytes()))
                 .compact();
         // TODO: Send the jwt to the client for authentication and authorization.
-        UserDto userDto = UserDto.fromGoogleUser(oidcUser);
+        UserDto userDto = userService.fromGoogleUser(oidcUser);
         UserDto savedUser = userService.saveUser(userDto);
         AppAuthenticationToken token = new AppAuthenticationToken(savedUser);
         SecurityContextHolder.getContext().setAuthentication(token);
-        // TODO: Create the constant value of this coming from the env.properties
+        // TODO: Create the constant value, coming from the env.properties
         response.sendRedirect("http://localhost:8080/api/v1/users");
     }
 }
