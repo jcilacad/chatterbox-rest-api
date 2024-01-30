@@ -40,6 +40,7 @@ public class Oauth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         UserDto savedUser = userService.saveUser(userDto);
         AppAuthenticationToken token = new AppAuthenticationToken(savedUser);
         SecurityContextHolder.getContext().setAuthentication(token);
+        // TODO: Create the constant value of this coming from the env.properties
         response.sendRedirect("http://localhost:8080/login-success");
     }
 }

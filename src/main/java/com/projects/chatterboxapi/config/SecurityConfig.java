@@ -1,5 +1,6 @@
 package com.projects.chatterboxapi.config;
 
+import com.projects.chatterboxapi.security.CustomOidcLogoutSuccessHandler;
 import com.projects.chatterboxapi.security.Oauth2AuthenticationEntryPoint;
 import com.projects.chatterboxapi.security.Oauth2LoginSuccessHandler;
 import com.projects.chatterboxapi.service.UserService;
@@ -8,7 +9,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.oauth2.client.oidc.web.logout.OidcClientInitiatedLogoutSuccessHandler;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -32,7 +32,7 @@ public class SecurityConfig {
                 })
 
                 .logout(logout -> logout
-                        .logoutSuccessHandler(oidcLogoutSuccessHandler())
+                        .logoutSuccessHandler(customOidcLogoutSuccessHandler())
                         .invalidateHttpSession(true)
                         .clearAuthentication(true)
                         .deleteCookies("JSESSIONID")
@@ -43,8 +43,8 @@ public class SecurityConfig {
         return httpSecurity.build();
     }
 
-    private OidcClientInitiatedLogoutSuccessHandler oidcLogoutSuccessHandler() {
-        OidcClientInitiatedLogoutSuccessHandler successHandler = new OidcClientInitiatedLogoutSuccessHandler(clientRegistrationRepository);
+    private CustomOidcLogoutSuccessHandler customOidcLogoutSuccessHandler() {
+        CustomOidcLogoutSuccessHandler successHandler = new CustomOidcLogoutSuccessHandler(clientRegistrationRepository, userService);
         successHandler.setPostLogoutRedirectUri("http://localhost:8080");
         return successHandler;
     }
