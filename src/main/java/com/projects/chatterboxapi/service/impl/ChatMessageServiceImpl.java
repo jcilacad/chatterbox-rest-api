@@ -1,7 +1,7 @@
 package com.projects.chatterboxapi.service.impl;
 
 import com.projects.chatterboxapi.entity.ChatMessage;
-import com.projects.chatterboxapi.entity.ChatNotification;
+import com.projects.chatterboxapi.dto.ChatNotification;
 import com.projects.chatterboxapi.enums.MessageStatus;
 import com.projects.chatterboxapi.exception.ResourceNotFoundException;
 import com.projects.chatterboxapi.repository.ChatMessageRepository;

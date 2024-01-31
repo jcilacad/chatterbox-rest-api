@@ -1,4 +1,4 @@
-package com.projects.chatterboxapi.entity;
+package com.projects.chatterboxapi.dto;
 
 import lombok.*;
 
