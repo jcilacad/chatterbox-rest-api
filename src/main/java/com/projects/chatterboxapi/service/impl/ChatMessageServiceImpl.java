@@ -1,6 +1,7 @@
 package com.projects.chatterboxapi.service.impl;
 
 import com.projects.chatterboxapi.entity.ChatMessage;
+import com.projects.chatterboxapi.entity.ChatNotification;
 import com.projects.chatterboxapi.enums.MessageStatus;
 import com.projects.chatterboxapi.exception.ResourceNotFoundException;
 import com.projects.chatterboxapi.repository.ChatMessageRepository;
@@ -11,6 +12,7 @@ import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,6 +23,7 @@ import java.util.List;
 public class ChatMessageServiceImpl implements ChatMessageService {
 
     private final ChatMessageRepository chatMessageRepository;
+    private final SimpMessagingTemplate messagingTemplate;
     private final ChatRoomService chatRoomService;
     private final MongoOperations mongoOperations;
 
@@ -66,5 +69,21 @@ public class ChatMessageServiceImpl implements ChatMessageService {
                         .and("recipientId").is(recipientId));
         Update update = Update.update("status", status);
         mongoOperations.updateMulti(query, update, ChatMessage.class);
+    }
+
+    @Override
+    public void processMessage(ChatMessage chatMessage) {
+        var chatId  = chatRoomService
+                .getChatId(chatMessage.getSenderId(), chatMessage.getRecipientId(), true);
+        chatMessage.setChatId(chatId.get());
+        ChatMessage savedMessage = chatMessageRepository.save(chatMessage);
+        messagingTemplate.convertAndSendToUser(
+                chatMessage.getRecipientId(), "/queue/messages",
+                new ChatNotification(
+                        savedMessage.getId(),
+                        savedMessage.getSenderId(),
+                        savedMessage.getSenderId()
+                )
+        );
     }
 }
