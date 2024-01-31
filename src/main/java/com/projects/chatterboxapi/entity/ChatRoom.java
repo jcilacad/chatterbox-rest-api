@@ -11,9 +11,13 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Builder
 @Document
 public class ChatRoom {
+
     @Id
     private String id;
+
     private String chatId;
+
     private String senderId;
+
     private String recipientId;
 }
