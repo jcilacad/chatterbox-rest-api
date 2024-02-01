@@ -1,6 +1,6 @@
 package com.projects.chatterboxapi.controller;
 
-import com.projects.chatterboxapi.dto.UserDto;
+import com.projects.chatterboxapi.dto.request.UserDtoRequest;
 import com.projects.chatterboxapi.service.AuthService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +16,7 @@ public class AuthController {
     private final AuthService authService;
 
     @GetMapping("/me")
-    public ResponseEntity<UserDto> google() {
+    public ResponseEntity<UserDtoRequest> google() {
         return ResponseEntity.ok(authService.user());
     }
 }

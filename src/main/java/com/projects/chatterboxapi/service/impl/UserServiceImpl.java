@@ -1,6 +1,6 @@
 package com.projects.chatterboxapi.service.impl;
 
-import com.projects.chatterboxapi.dto.UserDto;
+import com.projects.chatterboxapi.dto.request.UserDtoRequest;
 import com.projects.chatterboxapi.entity.User;
 import com.projects.chatterboxapi.exception.ResourceNotFoundException;
 import com.projects.chatterboxapi.mapper.UserMapper;
@@ -27,8 +27,8 @@ public class UserServiceImpl implements UserService {
     private String jwtSecret;
 
     @Override
-    public UserDto saveUser(UserDto userDto) {
-        User user = UserMapper.MAPPER.toEntity(userDto);
+    public UserDtoRequest saveUser(UserDtoRequest userDtoRequest) {
+        User user = UserMapper.MAPPER.toEntity(userDtoRequest);
         User savedUser = userRepository.save(user);
         return UserMapper.MAPPER.toDto(savedUser);
     }
@@ -42,29 +42,29 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto fromGoogleUser(DefaultOidcUser googleUser) {
-        UserDto userDto = new UserDto();
-        userDto.setId(googleUser.getSubject());
-        userDto.setName(googleUser.getName());
-        userDto.setEmail(googleUser.getEmail());
-        userDto.setImageUrl(googleUser.getPicture());
-        userDto.setActive(true);
-        userDto.setDateCreated(googleUser.getIssuedAt());
-        userDto.setDateUpdated(googleUser.getIssuedAt());
-        return userDto;
+    public UserDtoRequest fromGoogleUser(DefaultOidcUser googleUser) {
+        UserDtoRequest userDtoRequest = new UserDtoRequest();
+        userDtoRequest.setId(googleUser.getSubject());
+        userDtoRequest.setName(googleUser.getName());
+        userDtoRequest.setEmail(googleUser.getEmail());
+        userDtoRequest.setImageUrl(googleUser.getPicture());
+        userDtoRequest.setActive(true);
+        userDtoRequest.setDateCreated(googleUser.getIssuedAt());
+        userDtoRequest.setDateUpdated(googleUser.getIssuedAt());
+        return userDtoRequest;
     }
 
     @Override
-    public List<UserDto> getUsers() {
+    public List<UserDtoRequest> getUsers() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserDto currentUser = (UserDto) authentication.getPrincipal();
+        UserDtoRequest currentUser = (UserDtoRequest) authentication.getPrincipal();
         String email = currentUser.getEmail();
         List<User> users = userRepository.findAll();
-        List<UserDto> userDtos = users.stream()
+        List<UserDtoRequest> userDtoRequests = users.stream()
                 .filter(user -> !user.getEmail().equalsIgnoreCase(email))
                 .map(user -> UserMapper.MAPPER.toDto(user))
                 .collect(Collectors.toList());
-        return userDtos;
+        return userDtoRequests;
     }
 
     @Override

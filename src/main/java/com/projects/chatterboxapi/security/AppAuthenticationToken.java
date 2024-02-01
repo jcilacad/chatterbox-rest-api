@@ -1,6 +1,6 @@
 package com.projects.chatterboxapi.security;
 
-import com.projects.chatterboxapi.dto.UserDto;
+import com.projects.chatterboxapi.dto.request.UserDtoRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
@@ -9,13 +9,13 @@ import java.util.Collection;
 
 public class AppAuthenticationToken implements Authentication {
 
-    private final UserDto userDto;
+    private final UserDtoRequest userDtoRequest;
     private final boolean authenticated;
     private Collection<GrantedAuthority> authorities;
     private WebAuthenticationDetails details;
 
-    public AppAuthenticationToken(UserDto userDto) {
-        this.userDto = userDto;
+    public AppAuthenticationToken(UserDtoRequest userDtoRequest) {
+        this.userDtoRequest = userDtoRequest;
         this.authenticated = true;
     }
 
@@ -36,7 +36,7 @@ public class AppAuthenticationToken implements Authentication {
 
     @Override
     public Object getPrincipal() {
-        return userDto;
+        return userDtoRequest;
     }
 
     @Override
@@ -51,6 +51,6 @@ public class AppAuthenticationToken implements Authentication {
 
     @Override
     public String getName() {
-        return userDto.getName();
+        return userDtoRequest.getName();
     }
 }
