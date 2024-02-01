@@ -1,4 +1,4 @@
-package com.projects.chatterboxapi.dto;
+package com.projects.chatterboxapi.dto.request;
 
 import lombok.*;
 
@@ -9,7 +9,7 @@ import java.time.Instant;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserDto {
+public class UserDtoRequest {
 
     private String id;
     private String name;

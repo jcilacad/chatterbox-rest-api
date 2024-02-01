@@ -1,4 +1,4 @@
-package com.projects.chatterboxapi.dto;
+package com.projects.chatterboxapi.dto.response;
 
 import lombok.*;
 
@@ -7,11 +7,9 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ChatNotification {
+public class ChatNotificationResponse {
 
     private String id;
-
     private String senderId;
-
     private String senderName;
 }

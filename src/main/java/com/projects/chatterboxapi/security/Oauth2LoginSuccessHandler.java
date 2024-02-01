@@ -1,6 +1,6 @@
 package com.projects.chatterboxapi.security;
 
-import com.projects.chatterboxapi.dto.UserDto;
+import com.projects.chatterboxapi.dto.request.UserDtoRequest;
 import com.projects.chatterboxapi.service.UserService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -36,8 +36,8 @@ public class Oauth2LoginSuccessHandler implements AuthenticationSuccessHandler {
                 .signWith(Keys.hmacShaKeyFor(userService.getJwtSecret().getBytes()))
                 .compact();
         // TODO: Send the jwt to the client for authentication and authorization.
-        UserDto userDto = userService.fromGoogleUser(oidcUser);
-        UserDto savedUser = userService.saveUser(userDto);
+        UserDtoRequest userDtoRequest = userService.fromGoogleUser(oidcUser);
+        UserDtoRequest savedUser = userService.saveUser(userDtoRequest);
         AppAuthenticationToken token = new AppAuthenticationToken(savedUser);
         SecurityContextHolder.getContext().setAuthentication(token);
         // TODO: Create the constant value, coming from the env.properties

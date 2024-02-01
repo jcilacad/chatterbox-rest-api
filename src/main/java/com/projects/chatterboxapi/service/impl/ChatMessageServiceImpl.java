@@ -1,22 +1,29 @@
 package com.projects.chatterboxapi.service.impl;
 
+import com.projects.chatterboxapi.dto.request.UserDtoRequest;
+import com.projects.chatterboxapi.dto.response.ChatMessageResponse;
+import com.projects.chatterboxapi.dto.response.MessengerResponse;
 import com.projects.chatterboxapi.entity.ChatMessage;
-import com.projects.chatterboxapi.dto.ChatNotification;
+import com.projects.chatterboxapi.dto.response.ChatNotificationResponse;
 import com.projects.chatterboxapi.enums.MessageStatus;
 import com.projects.chatterboxapi.exception.ResourceNotFoundException;
+import com.projects.chatterboxapi.mapper.ChatMessageMapper;
 import com.projects.chatterboxapi.repository.ChatMessageRepository;
 import com.projects.chatterboxapi.service.ChatMessageService;
 import com.projects.chatterboxapi.service.ChatRoomService;
+import com.projects.chatterboxapi.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -25,6 +32,7 @@ public class ChatMessageServiceImpl implements ChatMessageService {
     private final ChatMessageRepository chatMessageRepository;
     private final SimpMessagingTemplate messagingTemplate;
     private final ChatRoomService chatRoomService;
+    private final UserService userService;
     private final MongoOperations mongoOperations;
 
     @Override
@@ -79,11 +87,35 @@ public class ChatMessageServiceImpl implements ChatMessageService {
         ChatMessage savedMessage = chatMessageRepository.save(chatMessage);
         messagingTemplate.convertAndSendToUser(
                 chatMessage.getRecipientId(), "/queue/messages",
-                new ChatNotification(
+                new ChatNotificationResponse(
                         savedMessage.getId(),
                         savedMessage.getSenderId(),
                         savedMessage.getSenderId()
                 )
         );
+    }
+
+    @Override
+    public MessengerResponse messengerResponse(String senderId, String recipientId) {
+        UserDtoRequest loggedInUser = (UserDtoRequest) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
+        List<UserDtoRequest> userDtoRequests = userService.getUsers();
+        List<ChatMessageResponse> chatMessageResponses;
+
+        if (senderId == null || senderId.trim().isEmpty()) {
+            UserDtoRequest userDtoRequest = userDtoRequests.stream().findFirst().get();
+            String firstSenderId = userDtoRequest.getId();
+            List<ChatMessage> chatMessages = this.findChatMessages(firstSenderId, recipientId);
+            chatMessageResponses = chatMessages.stream()
+                    .map(chatMessage -> ChatMessageMapper.MAPPER.toDto(chatMessage))
+                    .collect(Collectors.toList());
+        }
+        List<ChatMessage> chatMessages = this.findChatMessages(senderId, recipientId);
+        chatMessageResponses = chatMessages.stream()
+                .map(chatMessage -> ChatMessageMapper.MAPPER.toDto(chatMessage))
+                .collect(Collectors.toList());
+        return new MessengerResponse(loggedInUser, userDtoRequests, chatMessageResponses);
     }
 }

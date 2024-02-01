@@ -1,6 +1,6 @@
 package com.projects.chatterboxapi.service.impl;
 
-import com.projects.chatterboxapi.dto.UserDto;
+import com.projects.chatterboxapi.dto.request.UserDtoRequest;
 import com.projects.chatterboxapi.service.AuthService;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 public class AuthServiceImpl implements AuthService {
 
     @Override
-    public UserDto user() {
-        return (UserDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public UserDtoRequest user() {
+        return (UserDtoRequest) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 }

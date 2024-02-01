@@ -1,10 +1,9 @@
 package com.projects.chatterboxapi.repository;
 
-import com.projects.chatterboxapi.dto.UserDto;
+import com.projects.chatterboxapi.dto.request.UserDtoRequest;
 import com.projects.chatterboxapi.entity.User;
 import com.projects.chatterboxapi.mapper.UserMapper;
 import com.projects.chatterboxapi.service.UserService;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,14 +33,14 @@ class UserRepositoryTest {
         String email = "jcdilacad2020@plm.edu.ph";
         String imageUrl = "https://facebookk.com";
 
-        UserDto userDto = UserDto.builder()
+        UserDtoRequest userDtoRequest = UserDtoRequest.builder()
                 .id(id)
                 .name(name)
                 .email(email)
                 .imageUrl(imageUrl)
                 .build();
 
-        User savedUser = UserMapper.MAPPER.toEntity(userDto);
+        User savedUser = UserMapper.MAPPER.toEntity(userDtoRequest);
         userRepository.save(savedUser);
     }
 
