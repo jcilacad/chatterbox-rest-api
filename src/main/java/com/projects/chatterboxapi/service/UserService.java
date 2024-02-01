@@ -1,19 +1,21 @@
 package com.projects.chatterboxapi.service;
 
-import com.projects.chatterboxapi.dto.request.UserDtoRequest;
+import com.projects.chatterboxapi.dto.request.UserRequest;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 
 import java.util.List;
 
 public interface UserService {
 
-    UserDtoRequest saveUser(UserDtoRequest userDtoRequest);
+    UserRequest saveUser(UserRequest userRequest);
 
     String getJwtSecret();
 
     void setActiveStatus(String email, boolean activeStatus);
 
-    UserDtoRequest fromGoogleUser(DefaultOidcUser oidcUser);
+    UserRequest fromGoogleUser(DefaultOidcUser oidcUser);
 
-    List<UserDtoRequest> getUsers();
+    List<UserRequest> getUsers();
+
+    List<UserRequest> getUsersByName(String name);
 }

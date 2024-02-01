@@ -1,6 +1,6 @@
 package com.projects.chatterboxapi.controller;
 
-import com.projects.chatterboxapi.dto.request.UserDtoRequest;
+import com.projects.chatterboxapi.dto.request.UserRequest;
 import com.projects.chatterboxapi.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +20,7 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    public ResponseEntity<List<UserDtoRequest>> getUsers() {
+    public ResponseEntity<List<UserRequest>> getUsers() {
         return ResponseEntity.ok(userService.getUsers());
     }
 }

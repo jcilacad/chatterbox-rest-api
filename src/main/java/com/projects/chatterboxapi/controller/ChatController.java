@@ -22,8 +22,9 @@ public class ChatController {
 
     @GetMapping
     public ResponseEntity<MessengerResponse> messengerResponse(@RequestParam(name = "senderId", required = false) String senderId,
-                                                               @RequestParam(name = "recipientId", required = false) String recipientId) {
-        return ResponseEntity.ok(chatMessageService.messengerResponse(senderId, recipientId));
+                                                               @RequestParam(name = "recipientId", required = false) String recipientId,
+                                                               @RequestParam(name = "name", required = false) String name) {
+        return ResponseEntity.ok(chatMessageService.messengerResponse(senderId, recipientId, name));
     }
 
     @MessageMapping("/chat")

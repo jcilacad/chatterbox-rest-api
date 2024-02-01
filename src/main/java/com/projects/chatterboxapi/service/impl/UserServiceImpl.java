@@ -1,6 +1,6 @@
 package com.projects.chatterboxapi.service.impl;
 
-import com.projects.chatterboxapi.dto.request.UserDtoRequest;
+import com.projects.chatterboxapi.dto.request.UserRequest;
 import com.projects.chatterboxapi.entity.User;
 import com.projects.chatterboxapi.exception.ResourceNotFoundException;
 import com.projects.chatterboxapi.mapper.UserMapper;
@@ -27,8 +27,8 @@ public class UserServiceImpl implements UserService {
     private String jwtSecret;
 
     @Override
-    public UserDtoRequest saveUser(UserDtoRequest userDtoRequest) {
-        User user = UserMapper.MAPPER.toEntity(userDtoRequest);
+    public UserRequest saveUser(UserRequest userRequest) {
+        User user = UserMapper.MAPPER.toEntity(userRequest);
         User savedUser = userRepository.save(user);
         return UserMapper.MAPPER.toDto(savedUser);
     }
@@ -42,29 +42,36 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDtoRequest fromGoogleUser(DefaultOidcUser googleUser) {
-        UserDtoRequest userDtoRequest = new UserDtoRequest();
-        userDtoRequest.setId(googleUser.getSubject());
-        userDtoRequest.setName(googleUser.getName());
-        userDtoRequest.setEmail(googleUser.getEmail());
-        userDtoRequest.setImageUrl(googleUser.getPicture());
-        userDtoRequest.setActive(true);
-        userDtoRequest.setDateCreated(googleUser.getIssuedAt());
-        userDtoRequest.setDateUpdated(googleUser.getIssuedAt());
-        return userDtoRequest;
+    public UserRequest fromGoogleUser(DefaultOidcUser googleUser) {
+        UserRequest userRequest = new UserRequest();
+        userRequest.setId(googleUser.getSubject());
+        userRequest.setName(googleUser.getName());
+        userRequest.setEmail(googleUser.getEmail());
+        userRequest.setImageUrl(googleUser.getPicture());
+        userRequest.setActive(true);
+        userRequest.setDateCreated(googleUser.getIssuedAt());
+        userRequest.setDateUpdated(googleUser.getIssuedAt());
+        return userRequest;
     }
 
     @Override
-    public List<UserDtoRequest> getUsers() {
+    public List<UserRequest> getUsers() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserDtoRequest currentUser = (UserDtoRequest) authentication.getPrincipal();
+        UserRequest currentUser = (UserRequest) authentication.getPrincipal();
         String email = currentUser.getEmail();
         List<User> users = userRepository.findAll();
-        List<UserDtoRequest> userDtoRequests = users.stream()
+        List<UserRequest> userRequests = users.stream()
                 .filter(user -> !user.getEmail().equalsIgnoreCase(email))
                 .map(user -> UserMapper.MAPPER.toDto(user))
                 .collect(Collectors.toList());
-        return userDtoRequests;
+        return userRequests;
+    }
+
+    @Override
+    public List<UserRequest> getUsersByName(String name) {
+        return userRepository.findByName(name).stream()
+                .map((user) -> UserMapper.MAPPER.toDto(user))
+                .collect(Collectors.toList());
     }
 
     @Override
