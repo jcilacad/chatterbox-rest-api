@@ -1,6 +1,6 @@
 package com.projects.chatterboxapi.repository;
 
-import com.projects.chatterboxapi.dto.request.UserDtoRequest;
+import com.projects.chatterboxapi.dto.request.UserRequest;
 import com.projects.chatterboxapi.entity.User;
 import com.projects.chatterboxapi.mapper.UserMapper;
 import com.projects.chatterboxapi.service.UserService;
@@ -33,14 +33,14 @@ class UserRepositoryTest {
         String email = "jcdilacad2020@plm.edu.ph";
         String imageUrl = "https://facebookk.com";
 
-        UserDtoRequest userDtoRequest = UserDtoRequest.builder()
+        UserRequest userRequest = UserRequest.builder()
                 .id(id)
                 .name(name)
                 .email(email)
                 .imageUrl(imageUrl)
                 .build();
 
-        User savedUser = UserMapper.MAPPER.toEntity(userDtoRequest);
+        User savedUser = UserMapper.MAPPER.toEntity(userRequest);
         userRepository.save(savedUser);
     }
 

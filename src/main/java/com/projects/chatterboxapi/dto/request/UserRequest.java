@@ -9,7 +9,7 @@ import java.time.Instant;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserDtoRequest {
+public class UserRequest {
 
     private String id;
     private String name;

@@ -1,6 +1,6 @@
 package com.projects.chatterboxapi.dto.response;
 
-import com.projects.chatterboxapi.dto.request.UserDtoRequest;
+import com.projects.chatterboxapi.dto.request.UserRequest;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 public class MessengerResponse {
 
-    private UserDtoRequest loggedInUser;
-    private List<UserDtoRequest> userDtoRequests;
+    private UserRequest loggedInUser;
+    private List<UserRequest> userRequests;
     private List<ChatMessageResponse> chatMessageResponses;
 }

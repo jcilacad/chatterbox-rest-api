@@ -20,5 +20,5 @@ public interface ChatMessageService {
 
     void processMessage(ChatMessage chatMessage);
 
-    MessengerResponse messengerResponse(String senderId, String recipientId);
+    MessengerResponse messengerResponse(String senderId, String recipientId, String name);
 }
