@@ -82,18 +82,13 @@ public class ChatMessageServiceImpl implements ChatMessageService {
 
     @Override
     public void processMessage(ChatMessage chatMessage) {
-        var chatId = chatRoomService
-                .getChatId(chatMessage.getSenderId(), chatMessage.getRecipientId(), true);
+        var chatId = chatRoomService.getChatId(chatMessage.getSenderId(), chatMessage.getRecipientId(), true);
         chatMessage.setChatId(chatId.get());
         ChatMessage savedMessage = chatMessageRepository.save(chatMessage);
         messagingTemplate.convertAndSendToUser(
-                chatMessage.getRecipientId(), "/queue/messages",
-                new ChatNotificationResponse(
-                        savedMessage.getId(),
-                        savedMessage.getSenderId(),
-                        savedMessage.getSenderId()
-                )
-        );
+                chatMessage.getRecipientId(),
+                "/queue/messages",
+                new ChatNotificationResponse(savedMessage.getId(), savedMessage.getSenderId(), savedMessage.getSenderId()));
     }
 
     @Override
@@ -105,10 +100,7 @@ public class ChatMessageServiceImpl implements ChatMessageService {
     }
 
     private List<UserRequest> getUsers(String name) {
-        if (name != null) {
-            return userService.getUsersByName(name);
-        }
-        return userService.getUsers();
+        return name != null ? userService.getUsersByName(name) : userService.getUsers();
     }
 
     private List<ChatMessageResponse> getChatMessageResponses(String senderId, String recipientId) {
@@ -118,7 +110,11 @@ public class ChatMessageServiceImpl implements ChatMessageService {
                     .map(chatMessage -> ChatMessageMapper.MAPPER.toDto(chatMessage))
                     .collect(Collectors.toList());
         }
-        return new ArrayList<>();
+        UserRequest topUser = userService.getUsers().stream().findFirst().get();
+        UserRequest currentLoggedInUser = (UserRequest) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return findChatMessages(topUser.getId(), currentLoggedInUser.getId())
+                .stream().map(chatMessage -> ChatMessageMapper.MAPPER.toDto(chatMessage))
+                .collect(Collectors.toList());
     }
 
     private boolean isValidInput(String... values) {
