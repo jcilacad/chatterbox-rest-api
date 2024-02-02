@@ -69,8 +69,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserRequest> getUsersByName(String name) {
-        return userRepository.findByName(name).stream()
-                .map((user) -> UserMapper.MAPPER.toDto(user))
+        List<UserRequest> filteredUsers = this.getUsers();
+        return filteredUsers.stream()
+                .filter(ur -> ur.getName().equalsIgnoreCase(name))
                 .collect(Collectors.toList());
     }
 
