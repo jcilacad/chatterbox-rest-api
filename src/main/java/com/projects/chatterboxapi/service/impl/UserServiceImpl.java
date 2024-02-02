@@ -45,7 +45,7 @@ public class UserServiceImpl implements UserService {
     public UserRequest fromGoogleUser(DefaultOidcUser googleUser) {
         UserRequest userRequest = new UserRequest();
         userRequest.setId(googleUser.getSubject());
-        userRequest.setName(googleUser.getName());
+        userRequest.setName(googleUser.getFullName());
         userRequest.setEmail(googleUser.getEmail());
         userRequest.setImageUrl(googleUser.getPicture());
         userRequest.setActive(true);

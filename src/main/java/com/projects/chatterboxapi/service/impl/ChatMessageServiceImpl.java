@@ -105,7 +105,7 @@ public class ChatMessageServiceImpl implements ChatMessageService {
     }
 
     private List<UserRequest> getUsers(String name) {
-        if (name != null && !name.trim().isEmpty()) {
+        if (name != null) {
             return userService.getUsersByName(name);
         }
         return userService.getUsers();
@@ -122,6 +122,6 @@ public class ChatMessageServiceImpl implements ChatMessageService {
     }
 
     private boolean isValidInput(String... values) {
-        return Arrays.stream(values).allMatch(value -> value != null && !value.trim().isEmpty());
+        return Arrays.stream(values).allMatch(value -> value != null);
     }
 }
