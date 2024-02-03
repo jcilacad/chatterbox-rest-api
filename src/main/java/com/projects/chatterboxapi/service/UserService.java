@@ -18,4 +18,8 @@ public interface UserService {
     List<UserRequest> getUsers();
 
     List<UserRequest> getUsersByName(String name);
+
+    UserRequest getLoggedInUser();
+
+    UserRequest findById(String id);
 }
