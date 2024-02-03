@@ -12,9 +12,8 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class MessengerResponse {
+public class CurrentContactResponse {
 
-    private UserRequest loggedInUser;
-    private List<UserRequest> userRequests;
-    private CurrentContactResponse currentContactResponse;
+    private UserRequest userRequest;
+    private List<ChatMessageResponse> chatMessageResponses;
 }

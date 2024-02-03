@@ -2,9 +2,11 @@ package com.projects.chatterboxapi.service.impl;
 
 import com.projects.chatterboxapi.dto.request.UserRequest;
 import com.projects.chatterboxapi.dto.response.ChatMessageResponse;
+import com.projects.chatterboxapi.dto.response.CurrentContactResponse;
 import com.projects.chatterboxapi.dto.response.MessengerResponse;
 import com.projects.chatterboxapi.entity.ChatMessage;
 import com.projects.chatterboxapi.dto.response.ChatNotificationResponse;
+import com.projects.chatterboxapi.entity.User;
 import com.projects.chatterboxapi.enums.MessageStatus;
 import com.projects.chatterboxapi.exception.ResourceNotFoundException;
 import com.projects.chatterboxapi.mapper.ChatMessageMapper;
@@ -14,11 +16,7 @@ import com.projects.chatterboxapi.service.ChatRoomService;
 import com.projects.chatterboxapi.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.mongodb.core.MongoOperations;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -34,7 +32,6 @@ public class ChatMessageServiceImpl implements ChatMessageService {
     private final SimpMessagingTemplate messagingTemplate;
     private final ChatRoomService chatRoomService;
     private final UserService userService;
-    private final MongoOperations mongoOperations;
 
     @Override
     public ChatMessage save(ChatMessage chatMessage) {
@@ -72,12 +69,9 @@ public class ChatMessageServiceImpl implements ChatMessageService {
 
     @Override
     public void updateStatuses(String senderId, String recipientId, MessageStatus status) {
-        Query query = new Query(
-                Criteria
-                        .where("senderId").is(senderId)
-                        .and("recipientId").is(recipientId));
-        Update update = Update.update("status", status);
-        mongoOperations.updateMulti(query, update, ChatMessage.class);
+        List<ChatMessage> chatMessages = chatMessageRepository.findBySenderIdAndRecipientId(senderId, recipientId);
+        chatMessages.forEach(chatMessage -> chatMessage.setStatus(status));
+        chatMessageRepository.saveAll(chatMessages);
     }
 
     @Override
@@ -93,31 +87,43 @@ public class ChatMessageServiceImpl implements ChatMessageService {
 
     @Override
     public MessengerResponse messengerResponse(String senderId, String recipientId, String name) {
-        UserRequest loggedInUser = (UserRequest) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserRequest loggedInUser = userService.getLoggedInUser();
         List<UserRequest> userRequests = getUsers(name);
-        List<ChatMessageResponse> chatMessageResponses = getChatMessageResponses(senderId, recipientId);
-        return new MessengerResponse(loggedInUser, userRequests, chatMessageResponses);
+        CurrentContactResponse currentContactResponse = getCurrentContactResponse(senderId, recipientId);
+        return new MessengerResponse(loggedInUser, userRequests, currentContactResponse);
     }
 
     private List<UserRequest> getUsers(String name) {
         return name != null ? userService.getUsersByName(name) : userService.getUsers();
     }
 
-    private List<ChatMessageResponse> getChatMessageResponses(String senderId, String recipientId) {
+    private CurrentContactResponse getCurrentContactResponse(String senderId, String recipientId) {
         if (isValidInput(senderId, recipientId)) {
             List<ChatMessage> chatMessages = findChatMessages(senderId, recipientId);
-            return chatMessages.stream()
+            UserRequest userRequest = userService.findById(senderId);
+            List<ChatMessageResponse> chatMessageResponses = chatMessages
+                    .stream()
                     .map(chatMessage -> ChatMessageMapper.MAPPER.toDto(chatMessage))
                     .collect(Collectors.toList());
+            return getCurrentContactResponse(userRequest, chatMessageResponses);
         }
         UserRequest topUser = userService.getUsers().stream().findFirst().get();
-        UserRequest currentLoggedInUser = (UserRequest) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return findChatMessages(topUser.getId(), currentLoggedInUser.getId())
+        UserRequest currentLoggedInUser = userService.getLoggedInUser();
+        List<ChatMessageResponse> chatMessageResponses = findChatMessages(topUser.getId(), currentLoggedInUser.getId())
                 .stream().map(chatMessage -> ChatMessageMapper.MAPPER.toDto(chatMessage))
                 .collect(Collectors.toList());
+        return getCurrentContactResponse(topUser, chatMessageResponses);
     }
 
     private boolean isValidInput(String... values) {
         return Arrays.stream(values).allMatch(value -> value != null);
+    }
+
+    private CurrentContactResponse getCurrentContactResponse(UserRequest userRequest,
+                                                             List<ChatMessageResponse> chatMessageResponses) {
+        CurrentContactResponse currentContactResponse = new CurrentContactResponse();
+        currentContactResponse.setUserRequest(userRequest);
+        currentContactResponse.setChatMessageResponses(chatMessageResponses);
+        return currentContactResponse;
     }
 }

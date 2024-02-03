@@ -56,8 +56,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserRequest> getUsers() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserRequest currentUser = (UserRequest) authentication.getPrincipal();
+        UserRequest currentUser = this.getLoggedInUser();
         String email = currentUser.getEmail();
         List<User> users = userRepository.findAll();
         List<UserRequest> userRequests = users.stream()
@@ -73,6 +72,19 @@ public class UserServiceImpl implements UserService {
         return filteredUsers.stream()
                 .filter(ur -> ur.getName().equalsIgnoreCase(name))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public UserRequest getLoggedInUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return (UserRequest) authentication.getPrincipal();
+    }
+
+    @Override
+    public UserRequest findById(String id) {
+        return userRepository.findById(id)
+                .map(user -> UserMapper.MAPPER.toDto(user))
+                .orElseThrow(() -> new ResourceNotFoundException("User", "Id", id));
     }
 
     @Override
