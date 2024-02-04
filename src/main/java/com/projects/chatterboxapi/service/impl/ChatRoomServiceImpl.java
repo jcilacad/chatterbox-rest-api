@@ -5,6 +5,7 @@ import com.projects.chatterboxapi.repository.ChatRoomRepository;
 import com.projects.chatterboxapi.service.ChatRoomService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -15,6 +16,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     private final ChatRoomRepository chatRoomRepository;
 
     @Override
+    @Transactional
     public Optional<String> getChatId(String senderId, String recipientId, boolean createIfNotExist) {
         return chatRoomRepository
                 .findBySenderIdAndRecipientId(senderId, recipientId)

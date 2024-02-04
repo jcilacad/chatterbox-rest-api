@@ -5,9 +5,11 @@ import com.projects.chatterboxapi.service.AuthService;
 import com.projects.chatterboxapi.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
+@Transactional(readOnly = true)
 public class AuthServiceImpl implements AuthService {
 
     private final UserService userService;
