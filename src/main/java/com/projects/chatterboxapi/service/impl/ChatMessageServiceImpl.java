@@ -16,6 +16,7 @@ import com.projects.chatterboxapi.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
+@Transactional(readOnly = true)
 public class ChatMessageServiceImpl implements ChatMessageService {
 
     private final ChatMessageRepository chatMessageRepository;
@@ -32,6 +34,7 @@ public class ChatMessageServiceImpl implements ChatMessageService {
     private final UserService userService;
 
     @Override
+    @Transactional
     public ChatMessage save(ChatMessage chatMessage) {
         chatMessage.setStatus(MessageStatus.RECEIVED);
         return chatMessageRepository.save(chatMessage);
@@ -66,6 +69,7 @@ public class ChatMessageServiceImpl implements ChatMessageService {
     }
 
     @Override
+    @Transactional
     public void updateStatuses(String senderId, String recipientId, MessageStatus status) {
         List<ChatMessage> chatMessages = chatMessageRepository.findBySenderIdAndRecipientId(senderId, recipientId);
         chatMessages.forEach(chatMessage -> chatMessage.setStatus(status));
@@ -73,6 +77,7 @@ public class ChatMessageServiceImpl implements ChatMessageService {
     }
 
     @Override
+    @Transactional
     public void processMessage(ChatMessage chatMessage) {
         var chatId = chatRoomService.getChatId(chatMessage.getSenderId(), chatMessage.getRecipientId(), true);
         chatMessage.setChatId(chatId.get());
@@ -84,6 +89,7 @@ public class ChatMessageServiceImpl implements ChatMessageService {
     }
 
     @Override
+    @Transactional
     public MessengerResponse messengerResponse(String senderId, String recipientId, String name) {
         UserRequest loggedInUser = userService.getLoggedInUser();
         List<UserRequest> userRequests = getUsers(name);
