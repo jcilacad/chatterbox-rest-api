@@ -18,9 +18,6 @@ class UserRepositoryTest {
     @Autowired
     private UserService userService;
 
-    @Value("${jwt.secret}")
-    private String jwtSecret;
-
     @Autowired
     public UserRepositoryTest(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -58,10 +55,5 @@ class UserRepositoryTest {
         boolean status = false;
         String email = "johnchristopherilacad27@gmail.com";
         userService.setActiveStatus(email, status);
-    }
-
-    @Test
-    void sampleJwtSecret () {
-        log.info("JWT Secret - {}", jwtSecret);
     }
 }
