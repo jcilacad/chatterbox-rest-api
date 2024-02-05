@@ -11,10 +11,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.core.OAuth2AuthenticatedPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,8 +27,6 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    @Value("${jwt.secret}")
-    private String jwtSecret;
 
     @Override
     @Transactional
@@ -46,15 +46,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserRequest fromGoogleUser(DefaultOidcUser googleUser) {
+    public UserRequest fromGoogleUser(OAuth2AuthenticatedPrincipal googleUser) {
         UserRequest userRequest = new UserRequest();
-        userRequest.setId(googleUser.getSubject());
-        userRequest.setName(googleUser.getFullName());
-        userRequest.setEmail(googleUser.getEmail());
-        userRequest.setImageUrl(googleUser.getPicture());
+        userRequest.setId(googleUser.getAttribute("sub"));
+        userRequest.setName(googleUser.getAttribute("name"));
+        userRequest.setEmail(googleUser.getAttribute("email"));
+        userRequest.setImageUrl(googleUser.getAttribute("picture"));
         userRequest.setActive(true);
-        userRequest.setDateCreated(googleUser.getIssuedAt());
-        userRequest.setDateUpdated(googleUser.getIssuedAt());
+        userRequest.setDateCreated(Instant.now());
+        userRequest.setDateUpdated(Instant.now());
         return userRequest;
     }
 
@@ -89,10 +89,5 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(id)
                 .map(user -> UserMapper.MAPPER.toDto(user))
                 .orElseThrow(() -> new ResourceNotFoundException("User", "Id", id));
-    }
-
-    @Override
-    public String getJwtSecret() {
-        return this.jwtSecret;
     }
 }
