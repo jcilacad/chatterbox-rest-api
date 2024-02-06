@@ -1,6 +1,6 @@
 package com.projects.chatterboxapi.security;
 
-import com.projects.chatterboxapi.dto.response.UserInfo;
+import com.projects.chatterboxapi.dto.response.UserInfoResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.core.OAuth2AuthenticatedPrincipal;
 import org.springframework.security.oauth2.server.resource.introspection.OAuth2IntrospectionAuthenticatedPrincipal;
@@ -17,29 +17,29 @@ public class GoogleOpaqueTokenIntrospector implements OpaqueTokenIntrospector {
 
     @Override
     public OAuth2AuthenticatedPrincipal introspect(String token) {
-        UserInfo userInfo = userInfoClient.get()
+        UserInfoResponse userInfoResponse = userInfoClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/oauth2/v3/userinfo")
                         .queryParam("access_token", token)
                         .build())
                 .retrieve()
-                .bodyToMono(UserInfo.class)
+                .bodyToMono(UserInfoResponse.class)
                 .block();
-        Map<String, Object> attributes = getStringObjectMap(userInfo);
-        return new OAuth2IntrospectionAuthenticatedPrincipal(userInfo.name(), attributes, null);
+        Map<String, Object> attributes = getStringObjectMap(userInfoResponse);
+        return new OAuth2IntrospectionAuthenticatedPrincipal(userInfoResponse.getName(), attributes, null);
     }
 
-    private static Map<String, Object> getStringObjectMap(UserInfo userInfo) {
+    private static Map<String, Object> getStringObjectMap(UserInfoResponse userInfoResponse) {
         Map<String, Object> attributes = new HashMap<>();
-        attributes.put("sub", userInfo.sub());
-        attributes.put("name", userInfo.name());
-        attributes.put("picture", userInfo.picture());
-        attributes.put("email", userInfo.email());
-        attributes.put("familyName", userInfo.family_name());
-        attributes.put("locale", userInfo.locale());
-        attributes.put("subject", userInfo.sub());
-        attributes.put("givenName", userInfo.given_name());
-        attributes.put("emailVerified", userInfo.email());
+        attributes.put("sub", userInfoResponse.getSub());
+        attributes.put("name", userInfoResponse.getName());
+        attributes.put("picture", userInfoResponse.getPicture());
+        attributes.put("email", userInfoResponse.getEmail());
+        attributes.put("familyName", userInfoResponse.getFamily_name());
+        attributes.put("locale", userInfoResponse.getLocale());
+        attributes.put("subject", userInfoResponse.getSub());
+        attributes.put("givenName", userInfoResponse.getGiven_namep());
+        attributes.put("emailVerified", userInfoResponse.isEmail_verified());
         return attributes;
     }
 }

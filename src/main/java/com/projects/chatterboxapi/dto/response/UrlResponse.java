@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class MessageDto {
+public class UrlResponse {
 
-    private String message;
+    private String authURL;
 }

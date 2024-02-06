@@ -2,7 +2,6 @@ package com.projects.chatterboxapi.service;
 
 import com.projects.chatterboxapi.dto.request.UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticatedPrincipal;
-import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 
 import java.util.List;
 
@@ -14,11 +13,9 @@ public interface UserService {
 
     UserRequest fromGoogleUser(OAuth2AuthenticatedPrincipal oidcUser);
 
-    List<UserRequest> getUsers();
-
-    List<UserRequest> getUsersByName(String name);
-
-    UserRequest getLoggedInUser();
+    List<UserRequest> getUsersExceptAuthenticatedUser(String name);
 
     UserRequest findById(String id);
+
+    List<UserRequest> getUsersByQueryName(String name);
 }

@@ -1,0 +1,20 @@
+spring:
+  config:
+    import: file:env.properties
+  data:
+    mongodb:
+      database: ${DB_NAME}
+      port: ${DB_PORT}
+      host: ${DB_HOST}
+  security:
+    oauth2:
+      resourceserver:
+        opaque-token:
+          introspection-uri: ${INTROSPECTION_URI}
+          clientId: ${GOOGLE_CLIENT_ID}
+          clientSecret: ${GOOGLE_CLIENT_SECRET}
+
+front:
+  end:
+    url: ${FRONT_END_URL}
+

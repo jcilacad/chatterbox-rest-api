@@ -1,6 +1,5 @@
 package com.projects.chatterboxapi.service;
 
-import com.projects.chatterboxapi.dto.response.MessengerResponse;
 import com.projects.chatterboxapi.entity.ChatMessage;
 import com.projects.chatterboxapi.enums.MessageStatus;
 
@@ -19,6 +18,4 @@ public interface ChatMessageService {
     void updateStatuses(String senderId, String recipientId, MessageStatus status);
 
     void processMessage(ChatMessage chatMessage);
-
-    MessengerResponse messengerResponse(String senderId, String recipientId, String name);
 }

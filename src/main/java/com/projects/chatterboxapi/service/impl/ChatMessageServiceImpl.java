@@ -3,7 +3,6 @@ package com.projects.chatterboxapi.service.impl;
 import com.projects.chatterboxapi.dto.request.UserRequest;
 import com.projects.chatterboxapi.dto.response.ChatMessageResponse;
 import com.projects.chatterboxapi.dto.response.CurrentContactResponse;
-import com.projects.chatterboxapi.dto.response.MessengerResponse;
 import com.projects.chatterboxapi.entity.ChatMessage;
 import com.projects.chatterboxapi.dto.response.ChatNotificationResponse;
 import com.projects.chatterboxapi.enums.MessageStatus;
@@ -88,18 +87,18 @@ public class ChatMessageServiceImpl implements ChatMessageService {
                 new ChatNotificationResponse(savedMessage.getId(), savedMessage.getSenderId(), savedMessage.getSenderId()));
     }
 
-    @Override
-    @Transactional
-    public MessengerResponse messengerResponse(String senderId, String recipientId, String name) {
-        UserRequest loggedInUser = userService.getLoggedInUser();
-        List<UserRequest> userRequests = getUsers(name);
-        CurrentContactResponse currentContactResponse = getCurrentContactResponse(senderId, recipientId);
-        return new MessengerResponse(loggedInUser, userRequests, currentContactResponse);
-    }
-
-    private List<UserRequest> getUsers(String name) {
-        return name != null ? userService.getUsersByName(name) : userService.getUsers();
-    }
+//    @Override
+//    @Transactional
+//    public MessengerResponse messengerResponse(String senderId, String recipientId, String name) {
+//        UserRequest loggedInUser = userService.getLoggedInUser();
+//        List<UserRequest> userRequests = getUsers(name);
+//        CurrentContactResponse currentContactResponse = getCurrentContactResponse(senderId, recipientId);
+//        return new MessengerResponse(loggedInUser, userRequests, currentContactResponse);
+//    }
+//
+//    private List<UserRequest> getUsers(String name) {
+//        return name != null ? userService.getUsersByName(name) : userService.getUsers();
+//    }
 
     private CurrentContactResponse getCurrentContactResponse(String senderId, String recipientId) {
         CurrentContactResponse currentContactResponse = new CurrentContactResponse();
