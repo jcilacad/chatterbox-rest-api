@@ -7,9 +7,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-public class MessageDto {
+@AllArgsConstructor
+public class TokenResponse {
 
-    private String message;
+    private String token;
 }

@@ -5,14 +5,13 @@ import com.projects.chatterboxapi.entity.User;
 import com.projects.chatterboxapi.exception.ResourceNotFoundException;
 import com.projects.chatterboxapi.mapper.UserMapper;
 import com.projects.chatterboxapi.repository.UserRepository;
+import com.projects.chatterboxapi.service.AuthService;
 import com.projects.chatterboxapi.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.OAuth2AuthenticatedPrincipal;
-import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +26,7 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final AuthService authService;
 
     @Override
     @Transactional
@@ -59,8 +59,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserRequest> getUsers() {
-        UserRequest currentUser = this.getLoggedInUser();
+    public List<UserRequest> getUsersExceptAuthenticatedUser(String name) {
+        return name.trim().isEmpty() ? this.getUsersExcludingLoggedInUser() : this.getUsersByQueryName(name);
+    }
+
+    @Override
+    public UserRequest findById(String id) {
+        return userRepository.findById(id)
+                .map(user -> UserMapper.MAPPER.toDto(user))
+                .orElseThrow(() -> new ResourceNotFoundException("User", "Id", id));
+    }
+
+    // TODO: Process it on database.
+    private List<UserRequest> getUsersExcludingLoggedInUser() {
+        UserRequest currentUser = authService.getAuthenticatedUser();
         String email = currentUser.getEmail();
         List<User> users = userRepository.findAll();
         List<UserRequest> userRequests = users.stream()
@@ -71,23 +83,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserRequest> getUsersByName(String name) {
-        List<UserRequest> filteredUsers = this.getUsers();
-        return filteredUsers.stream()
-                .filter(ur -> ur.getName().equalsIgnoreCase(name))
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public UserRequest getLoggedInUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return (UserRequest) authentication.getPrincipal();
-    }
-
-    @Override
-    public UserRequest findById(String id) {
-        return userRepository.findById(id)
+    public List<UserRequest> getUsersByQueryName(String name) {
+        return userRepository.findByQueryName(name)
+                .stream()
                 .map(user -> UserMapper.MAPPER.toDto(user))
-                .orElseThrow(() -> new ResourceNotFoundException("User", "Id", id));
+                .collect(Collectors.toList());
     }
 }
