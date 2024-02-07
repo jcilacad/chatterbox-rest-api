@@ -24,6 +24,10 @@ public class ChatMessage {
 
     private String recipientId;
 
+    private String senderName;
+
+    private String recipientName;
+
     private String content;
 
     private Date timestamp;
