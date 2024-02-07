@@ -9,8 +9,6 @@ import com.projects.chatterboxapi.service.AuthService;
 import com.projects.chatterboxapi.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.OAuth2AuthenticatedPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,7 +58,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserRequest> getUsersExceptAuthenticatedUser(String name) {
-        return name.trim().isEmpty() ? this.getUsersExcludingLoggedInUser() : this.getUsersByQueryName(name);
+        return name == null || name.trim().isEmpty() ? this.getUsersExcludingLoggedInUser() : this.getUsersByQueryName(name);
     }
 
     @Override
@@ -70,13 +68,12 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new ResourceNotFoundException("User", "Id", id));
     }
 
-    // TODO: Process it on database.
-    private List<UserRequest> getUsersExcludingLoggedInUser() {
+    @Override
+    public List<UserRequest> getUsersExcludingLoggedInUser() {
         UserRequest currentUser = authService.getAuthenticatedUser();
         String email = currentUser.getEmail();
-        List<User> users = userRepository.findAll();
+        List<User> users = userRepository.findAllByEmailNotContaining(email);
         List<UserRequest> userRequests = users.stream()
-                .filter(user -> !user.getEmail().equalsIgnoreCase(email))
                 .map(user -> UserMapper.MAPPER.toDto(user))
                 .collect(Collectors.toList());
         return userRequests;
@@ -84,7 +81,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserRequest> getUsersByQueryName(String name) {
-        return userRepository.findByQueryName(name)
+        UserRequest currentUser = authService.getAuthenticatedUser();
+        String email = currentUser.getEmail();
+        return userRepository.findByNameContainingAndEmailNotContainingAllIgnoreCase(name, email)
                 .stream()
                 .map(user -> UserMapper.MAPPER.toDto(user))
                 .collect(Collectors.toList());

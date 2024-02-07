@@ -11,6 +11,7 @@ public interface UserRepository extends MongoRepository<User, String> {
 
     Optional<User> findByEmail(String email);
 
-    @Query("SELECT u FROM User u WHERE u.name LIKE CONCAT('%', :name, '%')")
-    List<User> findByQueryName(String name);
+    List<User> findAllByEmailNotContaining(String email);
+
+    List<User> findByNameContainingAndEmailNotContainingAllIgnoreCase(String name, String email);
 }

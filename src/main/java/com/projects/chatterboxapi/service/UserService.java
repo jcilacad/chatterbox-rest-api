@@ -18,4 +18,6 @@ public interface UserService {
     UserRequest findById(String id);
 
     List<UserRequest> getUsersByQueryName(String name);
+
+    List<UserRequest> getUsersExcludingLoggedInUser();
 }
