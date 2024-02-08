@@ -31,7 +31,4 @@ public class User {
 
     @CreatedDate
     private Instant dateCreated;
-
-    @LastModifiedDate
-    private Instant dateUpdated;
 }

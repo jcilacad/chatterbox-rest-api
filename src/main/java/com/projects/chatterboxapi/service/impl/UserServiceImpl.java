@@ -52,7 +52,6 @@ public class UserServiceImpl implements UserService {
         userRequest.setImageUrl(googleUser.getAttribute("picture"));
         userRequest.setActive(true);
         userRequest.setDateCreated(Instant.now());
-        userRequest.setDateUpdated(Instant.now());
         return userRequest;
     }
 
@@ -87,5 +86,10 @@ public class UserServiceImpl implements UserService {
                 .stream()
                 .map(user -> UserMapper.MAPPER.toDto(user))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
     }
 }

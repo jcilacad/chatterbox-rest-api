@@ -7,7 +7,6 @@ import com.projects.chatterboxapi.exception.ResourceNotFoundException;
 import com.projects.chatterboxapi.repository.ChatMessageRepository;
 import com.projects.chatterboxapi.service.ChatMessageService;
 import com.projects.chatterboxapi.service.ChatRoomService;
-import com.projects.chatterboxapi.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;

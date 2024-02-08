@@ -17,5 +17,4 @@ public class UserRequest {
     private String imageUrl;
     private boolean active;
     private Instant dateCreated;
-    private Instant dateUpdated;
 }

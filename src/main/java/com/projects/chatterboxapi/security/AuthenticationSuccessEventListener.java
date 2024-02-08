@@ -22,7 +22,8 @@ public class AuthenticationSuccessEventListener {
         if (authentication.getPrincipal() instanceof OAuth2AuthenticatedPrincipal) {
             OAuth2AuthenticatedPrincipal oidcUser = (OAuth2AuthenticatedPrincipal) authentication.getPrincipal();
             UserRequest userRequest = userService.fromGoogleUser(oidcUser);
-            userService.saveUser(userRequest);
+
+            if (!userService.existsByEmail(userRequest.getEmail())) userService.saveUser(userRequest);
         }
     }
 }
