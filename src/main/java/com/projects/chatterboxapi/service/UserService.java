@@ -20,4 +20,6 @@ public interface UserService {
     List<UserRequest> getUsersByQueryName(String name);
 
     List<UserRequest> getUsersExcludingLoggedInUser();
+
+    boolean existsByEmail(String email);
 }
