@@ -16,6 +16,4 @@ public interface ChatMessageService {
     ChatMessage findById(String id);
 
     void updateStatuses(String senderId, String recipientId, MessageStatus status);
-
-    void processMessage(ChatMessage chatMessage);
 }

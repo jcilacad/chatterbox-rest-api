@@ -17,4 +17,3 @@ spring:
 front:
   end:
     url: ${FRONT_END_URL}
-

@@ -4,6 +4,11 @@ import com.projects.chatterboxapi.security.CustomOidcLogoutSuccessHandler;
 import com.projects.chatterboxapi.security.GoogleOpaqueTokenIntrospector;
 import com.projects.chatterboxapi.security.Oauth2AuthenticationEntryPoint;
 import com.projects.chatterboxapi.service.UserService;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.OAuthFlow;
+import io.swagger.v3.oas.annotations.security.OAuthFlows;
+import io.swagger.v3.oas.annotations.security.OAuthScope;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,6 +25,10 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Configuration
 @EnableWebSecurity
 @AllArgsConstructor
+@SecurityScheme(name = "security_auth", type = SecuritySchemeType.OAUTH2,
+        flows = @OAuthFlows(clientCredentials  = @OAuthFlow(tokenUrl = "${openapi.oAuthFlow.tokenUrl}", scopes = {
+                @OAuthScope(name = "openid profile email", description = "openid profile email scope")
+        })))
 public class SecurityConfig {
 
     private final WebClient userInfoClient;
