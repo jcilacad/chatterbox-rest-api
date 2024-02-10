@@ -25,10 +25,12 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Configuration
 @EnableWebSecurity
 @AllArgsConstructor
-@SecurityScheme(name = "security_auth", type = SecuritySchemeType.OAUTH2,
-        flows = @OAuthFlows(clientCredentials  = @OAuthFlow(tokenUrl = "${openapi.oAuthFlow.tokenUrl}", scopes = {
-                @OAuthScope(name = "openid profile email", description = "openid profile email scope")
-        })))
+@SecurityScheme(
+        name = "Bearer Authentication",
+        type = SecuritySchemeType.HTTP,
+        bearerFormat = "JWT",
+        scheme = "bearer"
+)
 public class SecurityConfig {
 
     private final WebClient userInfoClient;
