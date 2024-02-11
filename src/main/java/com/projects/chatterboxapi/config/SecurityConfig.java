@@ -55,7 +55,9 @@ public class SecurityConfig {
                         .clearAuthentication(true)
                         .deleteCookies("JSESSIONID"))
                 .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers("/", "/auth/**", "/public/**").permitAll()
+                        .requestMatchers("/", "/public/**").permitAll()
+                        .requestMatchers("/api/v1/auth/url").permitAll()
+                        .requestMatchers("/api/v1/auth/callback").permitAll()
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated()
