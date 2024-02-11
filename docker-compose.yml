@@ -15,7 +15,7 @@ services:
   app:
     depends_on:
       - mongo_db
-    build: ./
+    build: .
     restart: on-failure
     env_file: ./.env
     ports:
