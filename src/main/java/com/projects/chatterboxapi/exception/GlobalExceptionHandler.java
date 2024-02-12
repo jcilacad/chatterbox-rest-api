@@ -18,7 +18,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorDetailsResponse> handleResourceNotFoundException(ResourceNotFoundException resourceNotFoundException,
                                                                                 WebRequest webRequest) {
-        log.error("Resource not found exception : ", resourceNotFoundException);
+        log.error("Resource Not Found Exception : ", resourceNotFoundException);
         ErrorDetailsResponse errorDetailsResponse = new ErrorDetailsResponse();
         errorDetailsResponse.setTimestamp(LocalDateTime.now());
         errorDetailsResponse.setMessage(resourceNotFoundException.getMessage());
@@ -29,6 +29,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NoHandlerFoundException.class)
     public ResponseEntity<ErrorDetailsResponse> handleNoHandlerFoundException(NoHandlerFoundException handlerFoundException,
                                                                               WebRequest webRequest) {
+        log.error("No Handler Found Exception : ", handlerFoundException);
         ErrorDetailsResponse errorDetailsResponse = new ErrorDetailsResponse();
         errorDetailsResponse.setTimestamp(LocalDateTime.now());
         errorDetailsResponse.setMessage(handlerFoundException.getMessage());
