@@ -12,6 +12,7 @@ import com.projects.chatterboxapi.exception.ResourceNotFoundException;
 import com.projects.chatterboxapi.mapper.UserMapper;
 import com.projects.chatterboxapi.repository.UserRepository;
 import com.projects.chatterboxapi.service.AuthService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -67,5 +68,13 @@ public class AuthServiceImpl implements AuthService {
                 frontendUrl
         ).execute().getAccessToken();
         return new TokenResponse(token);
+    }
+
+    @Override
+    public void processLogout(HttpServletResponse httpServletResponse) throws IOException {
+        User user = UserMapper.MAPPER.toEntity(this.getAuthenticatedUser());
+        user.setActive(false);
+        userRepository.save(user);
+        httpServletResponse.sendRedirect("https://accounts.google.com/logout");
     }
 }

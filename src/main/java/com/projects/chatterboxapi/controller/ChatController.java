@@ -17,6 +17,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import static com.projects.chatterboxapi.constants.PathConstants.*;
+
 @Tag(name = "RESTful APIs for Chat Resource")
 @SecurityRequirement(name = "Bearer Authentication")
 @Controller
@@ -27,14 +29,14 @@ public class ChatController {
     private final ChatRoomService chatRoomService;
     private final SimpMessagingTemplate messagingTemplate;
 
-    @MessageMapping("/chat")
+    @MessageMapping(CHAT)
     public void processMessage(@Payload ChatMessage chatMessage) {
         var chatId = chatRoomService.getChatId(chatMessage.getSenderId(), chatMessage.getRecipientId(), true);
         chatMessage.setChatId(chatId.get());
         ChatMessage savedMessage = chatMessageService.save(chatMessage);
         messagingTemplate.convertAndSendToUser(
                 chatMessage.getRecipientId(),
-                "/queue/messages", new ChatNotificationResponse(
+                QUEUE_MESSAGES, new ChatNotificationResponse(
                         savedMessage.getId(),
                         savedMessage.getSenderId(),
                         savedMessage.getSenderName()));
@@ -42,7 +44,7 @@ public class ChatController {
 
     @Operation(summary = "Count New Messages")
     @ApiResponse(responseCode = "200", description = "HTTP Status 200 SUCCESS")
-    @GetMapping("/api/v1/messages/{senderId}/{recipientId}/count")
+    @GetMapping(SENDER_ID_RECIPIENT_ID_COUNT)
     public ResponseEntity<Long> countNewMessages(@PathVariable String senderId,
                                                  @PathVariable String recipientId) {
         return ResponseEntity.ok(chatMessageService.countNewMessage(senderId, recipientId));
@@ -50,7 +52,7 @@ public class ChatController {
 
     @Operation(summary = "Find Chat Messages")
     @ApiResponse(responseCode = "200", description = "HTTP Status 200 SUCCESS")
-    @GetMapping("/api/v1/messages/{senderId}/{recipientId}")
+    @GetMapping(SENDER_ID_RECIPIENT_ID)
     public ResponseEntity<?> findChatMessages(@PathVariable String senderId,
                                               @PathVariable String recipientId) {
         return ResponseEntity.ok(chatMessageService.findChatMessages(senderId, recipientId));
@@ -58,7 +60,7 @@ public class ChatController {
 
     @Operation(summary = "Find Messages")
     @ApiResponse(responseCode = "200", description = "HTTP Status 200 SUCCESS")
-    @GetMapping("/api/v1/messages/{id}")
+    @GetMapping(ID)
     public ResponseEntity<?> findMessage(@PathVariable String id) {
         return ResponseEntity.ok(chatMessageService.findById(id));
     }
