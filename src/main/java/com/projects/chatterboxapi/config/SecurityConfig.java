@@ -1,9 +1,7 @@
 package com.projects.chatterboxapi.config;
 
-import com.projects.chatterboxapi.security.CustomOidcLogoutSuccessHandler;
 import com.projects.chatterboxapi.security.GoogleOpaqueTokenIntrospector;
 import com.projects.chatterboxapi.security.Oauth2AuthenticationEntryPoint;
-import com.projects.chatterboxapi.service.UserService;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import lombok.AllArgsConstructor;
@@ -31,7 +29,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class SecurityConfig {
 
     private final WebClient userInfoClient;
-    private final UserService userService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -46,11 +43,6 @@ public class SecurityConfig {
                     exceptionHandlingConfigurer.authenticationEntryPoint(
                             new Oauth2AuthenticationEntryPoint());
                 })
-                .logout(logout -> logout
-                        .logoutSuccessHandler(new CustomOidcLogoutSuccessHandler(userService))
-                        .invalidateHttpSession(true)
-                        .clearAuthentication(true)
-                        .deleteCookies("JSESSIONID"))
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers("/", "/public/**").permitAll()
                         .requestMatchers("/api/v1/auth/url").permitAll()

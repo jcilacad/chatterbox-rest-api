@@ -13,21 +13,23 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 
 import java.util.List;
 
+import static com.projects.chatterboxapi.constants.PathConstants.*;
+
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.setApplicationDestinationPrefixes("/app");
-        registry.enableSimpleBroker("/user");
-        registry.setUserDestinationPrefix("/user");
+        registry.setApplicationDestinationPrefixes(APP);
+        registry.enableSimpleBroker(USER);
+        registry.setUserDestinationPrefix(USER);
     }
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry
-                .addEndpoint("/ws")
+                .addEndpoint(WS)
                 .setAllowedOrigins("*")
                 .withSockJS();
     }

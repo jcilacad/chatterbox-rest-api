@@ -15,11 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import static com.projects.chatterboxapi.constants.PathConstants.API_V1_USERS;
+
 @Tag(name = "RESTful APIs For User Resource")
 @SecurityRequirement(name = "Bearer Authentication")
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/v1/users")
+@RequestMapping(API_V1_USERS)
 public class UserController {
 
     private final UserService userService;
