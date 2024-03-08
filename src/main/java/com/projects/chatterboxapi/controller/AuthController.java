@@ -15,9 +15,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
+import static com.projects.chatterboxapi.constants.OpenApiConstants.*;
 import static com.projects.chatterboxapi.constants.PathConstants.*;
 
-@Tag(name = "RESTful APIs for Authentication Resource")
+@Tag(name = AUTH_CONTROLLER_TAG)
 @RestController
 @AllArgsConstructor
 @RequestMapping(API_V1_AUTH)
@@ -25,31 +26,31 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @Operation(summary = "Get Authenticated User")
-    @ApiResponse(responseCode = "200", description = "HTTP Status 200 Success")
-    @SecurityRequirement(name = "Bearer Authentication")
+    @Operation(summary = AUTHENTICATED_USER)
+    @ApiResponse(responseCode = SUCCESS_CODE, description = SUCCESS_DESCRIPTION)
+    @SecurityRequirement(name = BEARER_AUTHENTICATION)
     @GetMapping(ME)
     public ResponseEntity<UserRequest> getAuthenticatedUser() {
         return ResponseEntity.ok(authService.getAuthenticatedUser());
     }
 
-    @Operation(summary = "Get Authentication URL")
-    @ApiResponse(responseCode = "200", description = "HTTP Status 200 SUCCESS")
+    @Operation(summary = AUTHENTICATION_URL)
+    @ApiResponse(responseCode = SUCCESS_CODE, description = SUCCESS_DESCRIPTION)
     @GetMapping(URL)
     public ResponseEntity<UrlResponse> auth() {
         return ResponseEntity.ok(authService.auth());
     }
 
-    @Operation(summary = "Get Callback URL")
-    @ApiResponse(responseCode = "200", description = "HTTP Status 200 SUCCESS")
+    @Operation(summary = CALLBACK_URL)
+    @ApiResponse(responseCode = SUCCESS_CODE, description = SUCCESS_DESCRIPTION)
     @GetMapping(CALLBACK)
     public ResponseEntity<TokenResponse> callback(@RequestParam("code") String code) throws IOException {
         return ResponseEntity.ok(authService.callback(code));
     }
 
-    @Operation(summary = "Logout Authenticated User")
-    @ApiResponse(responseCode = "200", description = "HTTP Status 200 SUCCESS")
-    @SecurityRequirement(name = "Bearer Authentication")
+    @Operation(summary = LOGOUT_AUTHENTICATED_USER)
+    @ApiResponse(responseCode = SUCCESS_CODE, description = SUCCESS_DESCRIPTION)
+    @SecurityRequirement(name = BEARER_AUTHENTICATION)
     @PostMapping(LOGOUT)
     public void logout(HttpServletResponse response) throws IOException {
         authService.processLogout(response);

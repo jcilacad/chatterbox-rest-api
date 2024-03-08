@@ -15,10 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import static com.projects.chatterboxapi.constants.OpenApiConstants.*;
 import static com.projects.chatterboxapi.constants.PathConstants.API_V1_USERS;
 
-@Tag(name = "RESTful APIs For User Resource")
-@SecurityRequirement(name = "Bearer Authentication")
+@Tag(name = USER_CONTROLLER_TAG)
+@SecurityRequirement(name = BEARER_AUTHENTICATION)
 @RestController
 @AllArgsConstructor
 @RequestMapping(API_V1_USERS)
@@ -26,8 +27,8 @@ public class UserController {
 
     private final UserService userService;
 
-    @Operation(summary = "Get Users Except Authenticated User")
-    @ApiResponse(responseCode = "200", description = "HTTP Status 200 SUCCESS")
+    @Operation(summary = USERS_EXCEPT_AUTHENTICATED_USER)
+    @ApiResponse(responseCode = SUCCESS_CODE, description = SUCCESS_DESCRIPTION)
     @GetMapping
     public ResponseEntity<List<UserRequest>> getUsersExceptAuthenticatedUser(@RequestParam(name = "name", required = false) String name) {
         return ResponseEntity.ok(userService.getUsersExceptAuthenticatedUser(name));

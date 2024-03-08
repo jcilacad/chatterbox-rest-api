@@ -1,7 +1,6 @@
 package com.projects.chatterboxapi.constants;
 
 public class PathConstants {
-
     public static final String API_V1_AUTH = "/api/v1/auth";
     public static final String ME = "/me";
     public static final String URL = "/url";
@@ -16,12 +15,4 @@ public class PathConstants {
     public static final String QUEUE_MESSAGES = "/queue/messages";
 
     public static final String API_V1_USERS = "/api/v1/users";
-
-    public static final String WS = "/ws";
-    public static final String USER = "/user";
-    public static final String APP = "/app";
-
-
-
-
 }
