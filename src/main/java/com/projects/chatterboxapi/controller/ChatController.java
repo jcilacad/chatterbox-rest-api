@@ -17,10 +17,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import static com.projects.chatterboxapi.constants.OpenApiConstants.*;
 import static com.projects.chatterboxapi.constants.PathConstants.*;
 
-@Tag(name = "RESTful APIs for Chat Resource")
-@SecurityRequirement(name = "Bearer Authentication")
+@Tag(name = CHAT_CONTROLLER_TAG)
+@SecurityRequirement(name = BEARER_AUTHENTICATION)
 @Controller
 @AllArgsConstructor
 public class ChatController {
@@ -42,24 +43,24 @@ public class ChatController {
                         savedMessage.getSenderName()));
     }
 
-    @Operation(summary = "Count New Messages")
-    @ApiResponse(responseCode = "200", description = "HTTP Status 200 SUCCESS")
+    @Operation(summary = COUNT_NEW_MESSAGES)
+    @ApiResponse(responseCode = SUCCESS_CODE, description = SUCCESS_DESCRIPTION)
     @GetMapping(SENDER_ID_RECIPIENT_ID_COUNT)
     public ResponseEntity<Long> countNewMessages(@PathVariable String senderId,
                                                  @PathVariable String recipientId) {
         return ResponseEntity.ok(chatMessageService.countNewMessage(senderId, recipientId));
     }
 
-    @Operation(summary = "Find Chat Messages")
-    @ApiResponse(responseCode = "200", description = "HTTP Status 200 SUCCESS")
+    @Operation(summary = FIND_CHAT_MESSAGES)
+    @ApiResponse(responseCode = SUCCESS_CODE, description = SUCCESS_DESCRIPTION)
     @GetMapping(SENDER_ID_RECIPIENT_ID)
     public ResponseEntity<?> findChatMessages(@PathVariable String senderId,
                                               @PathVariable String recipientId) {
         return ResponseEntity.ok(chatMessageService.findChatMessages(senderId, recipientId));
     }
 
-    @Operation(summary = "Find Messages")
-    @ApiResponse(responseCode = "200", description = "HTTP Status 200 SUCCESS")
+    @Operation(summary = FIND_MESSAGES)
+    @ApiResponse(responseCode = SUCCESS_CODE, description = SUCCESS_DESCRIPTION)
     @GetMapping(ID)
     public ResponseEntity<?> findMessage(@PathVariable String id) {
         return ResponseEntity.ok(chatMessageService.findById(id));

@@ -13,7 +13,8 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 
 import java.util.List;
 
-import static com.projects.chatterboxapi.constants.PathConstants.*;
+import static com.projects.chatterboxapi.constants.WebSocketConstants.*;
+
 
 @Configuration
 @EnableWebSocketMessageBroker
