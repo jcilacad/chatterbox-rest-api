@@ -17,14 +17,17 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import static com.projects.chatterboxapi.constants.OpenApiConstants.*;
+import static com.projects.chatterboxapi.constants.PathConstants.*;
+
 @Configuration
 @EnableWebSecurity
 @AllArgsConstructor
 @SecurityScheme(
-        name = "Bearer Authentication",
+        name = BEARER_AUTHENTICATION,
         type = SecuritySchemeType.HTTP,
-        bearerFormat = "JWT",
-        scheme = "bearer"
+        bearerFormat = JWT,
+        scheme = BEARER
 )
 public class SecurityConfig {
 
@@ -44,11 +47,11 @@ public class SecurityConfig {
                             new Oauth2AuthenticationEntryPoint());
                 })
                 .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers("/", "/public/**").permitAll()
-                        .requestMatchers("/api/v1/auth/url").permitAll()
-                        .requestMatchers("/api/v1/auth/callback").permitAll()
-                        .requestMatchers("/swagger-ui/**").permitAll()
-                        .requestMatchers("/v3/api-docs/**").permitAll()
+                        .requestMatchers(BASE, PUBLIC_ALL).permitAll()
+                        .requestMatchers(API_V1_AUTH_URL).permitAll()
+                        .requestMatchers(API_V1_AUTH_CALLBACK).permitAll()
+                        .requestMatchers(SWAGGER_UI_ALL).permitAll()
+                        .requestMatchers(V3_API_DOCS_ALL).permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(c -> c

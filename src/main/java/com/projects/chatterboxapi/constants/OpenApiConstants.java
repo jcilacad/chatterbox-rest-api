@@ -9,6 +9,8 @@ public class OpenApiConstants {
     public static final String SUCCESS_CODE = "200";
     public static final String SUCCESS_DESCRIPTION = "HTTP Status 200 Success";
     public static final String BEARER_AUTHENTICATION = "Bearer Authentication";
+    public static final String JWT = "JWT";
+    public static final String BEARER = "bearer";
 
     public static final String CHAT_CONTROLLER_TAG = "RESTful APIs for Chat Resource";
     public static final String COUNT_NEW_MESSAGES = "Count New Messages";

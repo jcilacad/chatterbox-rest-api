@@ -15,4 +15,13 @@ public class PathConstants {
     public static final String QUEUE_MESSAGES = "/queue/messages";
 
     public static final String API_V1_USERS = "/api/v1/users";
+
+    public static final String BASE = "/";
+    public static final String PUBLIC_ALL = "/public/**";
+    public static final String API_V1_AUTH_URL = "/api/v1/auth/url";
+    public static final String API_V1_AUTH_CALLBACK = "/api/v1/auth/callback";
+    public static final String SWAGGER_UI_ALL = "/swagger-ui/**";
+    public static final String V3_API_DOCS_ALL = "/v3/api-docs/**";
+
+
 }
